@@ -3,6 +3,8 @@ const app = express();
 const {validationResult, body, matchedData} = require('express-validator');
 const bodyParser = require('body-parser');
 
+const generateService = require('../service/generate');
+
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({  extended: true }));
 
@@ -17,7 +19,8 @@ app.post('/generate', checkPasswordLength(), checkStartsWith(), async function (
         return res.status(400).json({errors: errors.array()});
     }
 
-    return res.status(200).json('').end();
+    const result = generateService.generate(matchedData(req).length, matchedData(req).startWithLetterOrNumber);
+    return res.status(200).json(result).end();
 })
 
 exports.app = app;
